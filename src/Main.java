@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -25,28 +26,58 @@ public class Main {
     }
 
     private static void bubbleSort(int[] array) {
+        int[] a = Arrays.copyOf(array, array.length);
         int temp;
-        for (int i = 0; i < array.length; i++) {
-            for (int j = 0; j < array.length - 1; j++) {
-                if (array[j] > array[j + 1]) {
-                    temp = array[j];
-                    array[j] = array[j + 1];
-                    array[j + 1] = temp;
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < a.length - 1; j++) {
+                if (a[j] > a[j + 1]) {
+                    temp = a[j];
+                    a[j] = a[j + 1];
+                    a[j + 1] = temp;
                 }
             }
         }
+        //printArray(a);
     }
 
     private static void insertionSort(int[] array) {
-        for (int i = 2; i < array.length; i++) {
-            int key = array[i];
+        int[] a = Arrays.copyOf(array, array.length);
+        for (int i = 2; i < a.length; i++) {
+            int key = a[i];
             int j = i - 1;
-            while (j >= 0 && array[j] > key) {
-                array[j + 1] = array[j];
+            while (j >= 0 && a[j] > key) {
+                a[j + 1] = a[j];
                 j = j - 1;
             }
-            array[j + 1] = key;
+            a[j + 1] = key;
         }
+        //printArray(a);
+    }
+
+    private static void shakerSort(int[] array) {
+        int[] a = Arrays.copyOf(array, array.length);
+        int left = 0;
+        int right = a.length - 1;
+        int temp;
+        do {
+            for (int i = left; i < right; i++) {
+                if (a[i] > a[i + 1]) {
+                    temp = a[i];
+                    a[i] = a[i + 1];
+                    a[i + 1] = temp;
+                }
+            }
+            right--;
+            for (int i = right; i > left; i--) {
+                if (a[i] < a[i - 1]) {
+                    temp = a[i];
+                    a[i] = a[i - 1];
+                    a[i - 1] = temp;
+                }
+            }
+            left++;
+        } while(left < right);
+        //printArray(a);
     }
 
     private static int getMin(int[] array) {
@@ -83,10 +114,23 @@ public class Main {
         int arrayLength = scanner.nextInt();
         int[] array = new int[arrayLength];
         fillArray(array);
-        printArray(array);
-        //bubbleSort(array);
+
+        //printArray(array);
+
+        long startTime = System.currentTimeMillis();
+        bubbleSort(array);
+        long endTime = System.currentTimeMillis();
+        long timeBubbleSortElapsed = endTime - startTime;
+
+        startTime = System.currentTimeMillis();
         insertionSort(array);
-        printArray(array);
+        endTime = System.currentTimeMillis();
+        long timeInsertionSortElapsed = endTime - startTime;
+
+        startTime = System.currentTimeMillis();
+        shakerSort(array);
+        endTime = System.currentTimeMillis();
+        long timeShakerSortElapsed = endTime - startTime;
 
         int min = getMin(array);
         System.out.println("Минимальное число в массиве: " + min);
@@ -96,5 +140,9 @@ public class Main {
 
         double mean = getMean(array);
         System.out.println("Среднее в массиве: " + mean);
+
+        System.out.println("Время сортировки пузырьком: " + timeBubbleSortElapsed + " мс.");
+        System.out.println("Время сортировки вставками: " + timeInsertionSortElapsed + " мс.");
+        System.out.println("Время сортировки вставками: " + timeShakerSortElapsed + " мс.");
     }
 }
